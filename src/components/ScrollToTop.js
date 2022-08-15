@@ -1,14 +1,48 @@
-import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import React from "react";
+import useScrollTrigger from "@mui/material/useScrollTrigger";
+import Box from "@mui/material/Box";
+import { createTheme } from "@mui/system";
+import { Zoom } from "@mui/material";
+const theme = createTheme();
+function ScrollToTop(props) {
+  const { children, window } = props;
+  // Note that you normally won't need to set the window ref as useScrollTrigger
+  // will default to window.
+  // This is only being set here because the demo is in an iframe.
+  const trigger = useScrollTrigger({
+    target: window ? window() : undefined,
+    disableHysteresis: true,
+    threshold: 100,
+  });
 
-// ----------------------------------------------------------------------
+  const handleClick = (event) => {
+    const anchor = (event.target.ownerDocument || document).querySelector(
+      "#back-to-top-anchor"
+    );
 
-export default function ScrollToTop() {
-  const { pathname } = useLocation();
+    if (anchor) {
+      anchor.scrollIntoView({
+        block: "center",
+        behavior: "smooth",
+      });
+    }
+  };
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
-
-  return null;
+  return (
+    <Zoom in={trigger}>
+      <Box
+        onClick={handleClick}
+        role="presentation"
+        sx={{
+          position: "fixed",
+          bottom: theme.spacing(5),
+          right: theme.spacing(5),
+        }}
+      >
+        {children}
+      </Box>
+    </Zoom>
+  );
 }
+
+export default ScrollToTop;

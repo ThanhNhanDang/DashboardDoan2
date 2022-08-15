@@ -1,57 +1,106 @@
-import { styled } from '@mui/material/styles';
-import { Card } from '@mui/material';
-import { RadialGauge } from 'react-canvas-gauges';
-import { useSelector } from 'react-redux';
+import ReactApexChart from "react-apexcharts";
+import { useEffect, useState } from "react";
+import { useSubscription } from "mqtt-react-hooks";
 
-const RootStyle = styled(Card)(({ theme }) => ({
-  boxShadow: 'none',
-  textAlign: 'center',
-  padding: theme.spacing(11, 0),
-  color: theme.palette.info.darker
-}));
-function Humid() {
-  const messageMQTT = useSelector((state) => state.message);
+function Humid({ check }) {
+  const { message } = useSubscription(["doan2/status"]);
+  const [series, setSeries] = useState([0]);
+  useEffect(() => {
+    if (message) {
+      const json = JSON.parse(message.message);
+      if (check) {
+        if (json.h1 == null) return;
+        setSeries([json.h1]);
+      } else {
+        if (json.h == null) return;
+        setSeries([json.h]);
+      }
+    }
+  }, [message]);
+  const options = {
+    chart: {
+      height: 350,
+      type: "radialBar",
+      toolbar: {
+        show: true,
+      },
+    },
+    plotOptions: {
+      radialBar: {
+        startAngle: -135,
+        endAngle: 225,
+        hollow: {
+          margin: 0,
+          size: "70%",
+          background: "#fff",
+          image: undefined,
+          imageOffsetX: 0,
+          imageOffsetY: 0,
+          position: "front",
+          dropShadow: {
+            enabled: true,
+            top: 3,
+            left: 0,
+            blur: 4,
+            opacity: 0.24,
+          },
+        },
+        track: {
+          background: "#fff",
+          strokeWidth: "67%",
+          margin: 0, // margin is in pixels
+          dropShadow: {
+            enabled: true,
+            top: -3,
+            left: 0,
+            blur: 4,
+            opacity: 0.35,
+          },
+        },
+
+        dataLabels: {
+          show: true,
+          name: {
+            offsetY: -10,
+            show: true,
+            color: "#888",
+            fontSize: "17px",
+          },
+          value: {
+            color: "#111",
+            fontSize: "36px",
+            formatter: function (val) {
+              return val;
+            },
+          },
+        },
+      },
+    },
+    fill: {
+      type: "gradient",
+      gradient: {
+        shade: "dark",
+        type: "horizontal",
+        shadeIntensity: 0.5,
+        gradientToColors: ["#ABE5A1"],
+        inverseColors: true,
+        opacityFrom: 1,
+        opacityTo: 1,
+        stops: [0, 100],
+      },
+    },
+    stroke: {
+      lineCap: "round",
+    },
+    labels: ["Độ ẩm (%)"],
+  };
   return (
-    <RootStyle>
-      <RadialGauge
-        width={300}
-        height={300}
-        units="(%)"
-        title="Độ Ẩm"
-        value={messageMQTT.h}
-        minValue={0}
-        maxValue={100}
-        colorValueBoxRect="#049faa"
-        colorValueBoxRectEnd="#049faa"
-        colorValueBoxBackground="#f1fbfc"
-        valueInt={2}
-        majorTicks={['0', '20', '40', '60', '80', '100']}
-        minorTicks={4}
-        strokeTicks="true"
-        highlights={[
-          {
-            from: 60,
-            to: 100,
-            color: '#03C0C1'
-          }
-        ]}
-        colorPlate="#fff"
-        borderShadowWidth={0}
-        borders={false}
-        needleType="line"
-        colorNeedle="#007F80"
-        colorNeedleEnd="#007F80"
-        needleWidth={2}
-        needleCircleSize={3}
-        colorNeedleCircleOuter="#007F80"
-        needleCircleOuter="true"
-        needleCircleInner={false}
-        animationDuration={1500}
-        animationRule="linear"
-      >
-        {' '}
-      </RadialGauge>
-    </RootStyle>
+    <ReactApexChart
+      options={options}
+      series={series}
+      type="radialBar"
+      height={350}
+    />
   );
 }
 

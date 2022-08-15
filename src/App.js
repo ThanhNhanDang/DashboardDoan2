@@ -9,8 +9,9 @@ import Router from "./routes";
 import ThemeConfig from "./theme";
 import GlobalStyles from "./theme/globalStyles";
 // components
-import ScrollToTop from "./components/ScrollToTop";
+import BackToTop from "./components/BackToTop";
 import { BaseOptionChartStyle } from "./components/charts/BaseOptionChart";
+
 // Import action dùng để dispatch
 // import {
 //   actGetAllDataDHT,
@@ -22,7 +23,7 @@ import { BaseOptionChartStyle } from "./components/charts/BaseOptionChart";
 //   actGetUserAuth
 // } from './actions/index';
 
-function App() {
+function App(props) {
   /*
    * idtp = 1: doan2/status
    * idtp = 2: doan2/onOff/led
@@ -30,9 +31,9 @@ function App() {
    */
   const options = {
     hostname: process.env.REACT_APP_MQTT_URL,
-    port: process.env.REACT_APP_MQTT_PORT,
     username: process.env.REACT_APP_MQTT_USERNAME,
     password: process.env.REACT_APP_MQTT_PASSWORD,
+    protocol: "wss",
   };
   /*
   const [, setMessages] = useState({});
@@ -168,7 +169,7 @@ function App() {
  */
   return (
     <ThemeConfig>
-      <ScrollToTop />
+      <BackToTop />
       <GlobalStyles />
       <BaseOptionChartStyle />
       <Connector options={options} parserMethod={(msg) => msg}>

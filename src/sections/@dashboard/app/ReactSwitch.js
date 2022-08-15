@@ -132,8 +132,18 @@ const Android12Switch = styled(Switch)(({ theme }) => ({
 export default function ReactSwitch({ divices, groupName }) {
   // const messageMQTT = useSelector((state) => state.message);
 
-  const [, setCheckAll] = useState(false);
-  const [checks, setChecks] = useState([false, false, false, false, false]);
+  const [checks, setChecks] = useState([
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+  ]);
   const { message } = useSubscription(["doan2/onOff/feedback", "doan2/status"]);
   const { client } = useMqttState();
   const json = { onOff: 1, iddv: 0, idtp: 2 };
@@ -142,13 +152,17 @@ export default function ReactSwitch({ divices, groupName }) {
     if (message) {
       const json = JSON.parse(message.message);
       setChecks([
-        json.l1 ? true : false,
-        json.l2 ? true : false,
-        json.l3 ? true : false,
-        json.l4 ? true : false,
-        json.d ? true : false,
+        json.l[0] ? true : false,
+        json.l[1] ? true : false,
+        json.l[2] ? true : false,
+        json.l[3] ? true : false,
+        json.al ? true : false,
+        json.f[0] ? true : false,
+        json.f[1] ? true : false,
+        json.f[2] ? true : false,
+        json.f[3] ? true : false,
+        json.af ? true : false,
       ]);
-      setCheckAll(json.al ? true : false);
     }
   }, [message]);
 
@@ -156,6 +170,8 @@ export default function ReactSwitch({ divices, groupName }) {
     if (json.idtp === 2) return client.publish("doan2/onOff/led", message);
     if (json.idtp === 3) return client.publish("doan2/onOff/door", message);
     if (json.idtp === 4) return client.publish("doan2/onOff/led/all", message);
+    if (json.idtp === 5) return client.publish("doan2/onOff/fan", message);
+    if (json.idtp === 6) return client.publish("doan2/onOff/fan/all", message);
     return null;
   }
 
@@ -168,6 +184,7 @@ export default function ReactSwitch({ divices, groupName }) {
       else json.idtp = 2;
     else json.idtp = idtp;
     if (value === undefined) json.iddv = 0;
+    else if (idtp === 5) json.iddv = value - 1;
     else json.iddv = value;
     if (checked) json.onOff = 1;
     else json.onOff = 0;
@@ -181,11 +198,11 @@ export default function ReactSwitch({ divices, groupName }) {
         </Typography>
         <Grid container item={true} xs={12} sm={12}>
           {divices.map((value, index) => (
-            <Grid key={index} item={true} xs={12} sm={index === 4 ? 12 : 6}>
+            <Grid key={value.pin} item={true} xs={12} sm={index === 4 ? 12 : 6}>
               <RootStyleCard>
                 <CardActionArea
                   onClick={() =>
-                    handleChange(checks[index], value.pin, value.idtp)
+                    handleChange(!checks[value.pin - 1], value.pin, value.idtp)
                   }
                 >
                   <CardContent>
@@ -197,17 +214,17 @@ export default function ReactSwitch({ divices, groupName }) {
                         <Iconify
                           icon={
                             groupName === "Đèn"
-                              ? !checks
-                                ? "fluent-emoji-flat:light-bulb"
-                                : "fluent-emoji-high-contrast:light-bulb"
+                              ? !checks[value.pin - 1]
+                                ? "fluent-emoji-high-contrast:light-bulb"
+                                : "fluent-emoji-flat:light-bulb"
                               : "bi:fan"
                           }
-                          styled={
+                          style={
                             groupName === "Quạt"
-                              ? !checks
+                              ? checks[value.pin - 1]
                                 ? {
-                                    backgroundColor:
-                                      Theme.palette.success.light,
+                                    animation: "rotating 2s linear infinite",
+                                    color: Theme.palette.success.light,
                                   }
                                 : ""
                               : ""
@@ -215,16 +232,22 @@ export default function ReactSwitch({ divices, groupName }) {
                           width="80%"
                           height="80%"
                         />
+                        <style>{`
+            @keyframes rotating {
+                 0% { transform: rotate(0deg); }
+                 100% { transform: rotate(360deg); }
+            }
+        `}</style>
                       </IconWrapperStyle>
                       {groupName === "Đèn" ? (
                         <MaterialUISwitch
                           sx={{ m: 1 }}
-                          checked={checks[index]}
+                          checked={checks[value.pin - 1]}
                         />
                       ) : (
                         <Android12Switch
                           sx={{ m: 1 }}
-                          checked={checks[index]}
+                          checked={checks[value.pin - 1]}
                         />
                       )}
                     </RootStyle>
