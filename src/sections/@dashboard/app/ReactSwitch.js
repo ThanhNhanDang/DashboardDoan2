@@ -9,11 +9,10 @@ import {
   Switch,
   Typography,
 } from "@mui/material";
-import { useMqttState, useSubscription } from "mqtt-react-hooks";
 import PropTypes from "prop-types";
 // component
 import Iconify from "../../../components/Iconify";
-import { useEffect, useState } from "react";
+import { useMqttState } from "mqtt-react-hooks";
 
 const Theme = createTheme();
 // ----------------------------------------------------------------------
@@ -129,43 +128,9 @@ const Android12Switch = styled(Switch)(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 // ic:baseline-mode-fan-off
-export default function ReactSwitch({ divices, groupName }) {
+export default function ReactSwitch({ divices, groupName, checks, json }) {
   // const messageMQTT = useSelector((state) => state.message);
-
-  const [checks, setChecks] = useState([
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-  ]);
-  const { message } = useSubscription(["doan2/onOff/feedback", "doan2/status"]);
   const { client } = useMqttState();
-  const json = { onOff: 1, iddv: 0, idtp: 2 };
-
-  useEffect(() => {
-    if (message) {
-      const json = JSON.parse(message.message);
-      setChecks([
-        json.l[0] ? true : false,
-        json.l[1] ? true : false,
-        json.l[2] ? true : false,
-        json.l[3] ? true : false,
-        json.al ? true : false,
-        json.f[0] ? true : false,
-        json.f[1] ? true : false,
-        json.f[2] ? true : false,
-        json.f[3] ? true : false,
-        json.af ? true : false,
-      ]);
-    }
-  }, [message]);
-
   function handleClick(message) {
     if (json.idtp === 2) return client.publish("doan2/onOff/led", message);
     if (json.idtp === 3) return client.publish("doan2/onOff/door", message);
@@ -175,7 +140,7 @@ export default function ReactSwitch({ divices, groupName }) {
     return null;
   }
 
-  function handleChange(checked, value, idtp) {
+  async function handleChange(checked, value, idtp) {
     handleChange.prototype = {
       checked: PropTypes.bool,
     };
@@ -188,7 +153,7 @@ export default function ReactSwitch({ divices, groupName }) {
     else json.iddv = value;
     if (checked) json.onOff = 1;
     else json.onOff = 0;
-    handleClick(JSON.stringify(json));
+    await handleClick(JSON.stringify(json));
   }
   return (
     <Card style={{ boxShadow: "0 6px 20px 0 rgba(0, 0, 0, 0.19)" }}>
@@ -261,10 +226,3 @@ export default function ReactSwitch({ divices, groupName }) {
     </Card>
   );
 }
-
-ReactSwitch.propTypes = {
-  checked: PropTypes.bool,
-  value: PropTypes.number,
-  idtp: PropTypes.number,
-  deviceName: PropTypes.string,
-};

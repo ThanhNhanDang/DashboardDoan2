@@ -33,7 +33,8 @@ function App(props) {
     hostname: process.env.REACT_APP_MQTT_URL,
     username: process.env.REACT_APP_MQTT_USERNAME,
     password: process.env.REACT_APP_MQTT_PASSWORD,
-    protocol: "wss",
+    port: process.env.REACT_APP_MQTT_PORT,
+    protocol: "ws",
   };
   /*
   const [, setMessages] = useState({});

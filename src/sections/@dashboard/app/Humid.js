@@ -1,22 +1,7 @@
 import ReactApexChart from "react-apexcharts";
-import { useEffect, useState } from "react";
-import { useSubscription } from "mqtt-react-hooks";
 
-function Humid({ check }) {
-  const { message } = useSubscription(["doan2/status"]);
-  const [series, setSeries] = useState([0]);
-  useEffect(() => {
-    if (message) {
-      const json = JSON.parse(message.message);
-      if (check) {
-        if (json.h1 == null) return;
-        setSeries([json.h1]);
-      } else {
-        if (json.h == null) return;
-        setSeries([json.h]);
-      }
-    }
-  }, [message]);
+function Humid({ series }) {
+ 
   const options = {
     chart: {
       height: 350,

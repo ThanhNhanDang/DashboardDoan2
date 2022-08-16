@@ -8,6 +8,8 @@ import {
   CardContent,
 } from "@mui/material";
 import { styled } from "@mui/system";
+import { useSubscription } from "mqtt-react-hooks";
+import { useEffect, useState } from "react";
 
 // components
 import Page from "../components/Page";
@@ -47,6 +49,21 @@ const RootStyle = styled(Card)(({ theme }) => ({
 }));
 
 function DashboardApp() {
+  const [series, setSeries] = useState([[0], [0], [0], [0]]); //t,h,t1,h1
+  const [checks, setChecks] = useState([
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+  ]);
+  const { message } = useSubscription(["doan2/status"]);
+  const json = { onOff: 1, iddv: 0, idtp: 2 };
   const divicesLed = [
     { pin: 1, deviceName: "Phòng Khách", idtp: 2 },
     { pin: 2, deviceName: "Nhà Tắm", idtp: 2 },
@@ -64,6 +81,32 @@ function DashboardApp() {
     { pin: 10, deviceName: "Mở Tất Cả Quạt", idtp: 6 },
     // { pin: 5, deviceName: "Cửa Chính", idtp: 3 },
   ];
+
+  useEffect(() => {
+    if (message) {
+      const json = JSON.parse(message.message);
+
+      if (
+        json.t != null &&
+        json.t1 != null &&
+        json.h != null &&
+        json.h1 != null
+      )
+        setSeries([[json.t], [json.h], [json.t1], [json.h1]]);
+      setChecks([
+        json.l[0] ? true : false,
+        json.l[1] ? true : false,
+        json.l[2] ? true : false,
+        json.l[3] ? true : false,
+        json.al ? true : false,
+        json.f[0] ? true : false,
+        json.f[1] ? true : false,
+        json.f[2] ? true : false,
+        json.f[3] ? true : false,
+        json.af ? true : false,
+      ]);
+    }
+  }, [message]);
 
   return (
     <Page title="Dashboard | Đồ án 2">
@@ -86,10 +129,10 @@ function DashboardApp() {
                 </Typography>
                 <Grid container item={true} xs={12} lg={12}>
                   <Grid item xs={12} sm={6}>
-                    <Temp check={true} />
+                    <Temp series={series[0]} />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <Humid check={true} />
+                    <Humid series={series[1]} />
                   </Grid>
                 </Grid>
               </CardContent>
@@ -103,20 +146,30 @@ function DashboardApp() {
                 </Typography>
                 <Grid container item={true} xs={12} lg={12}>
                   <Grid item xs={12} sm={6}>
-                    <Temp check={false} />
+                    <Temp series={series[2]} />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <Humid check={false} />
+                    <Humid series={series[3]} />
                   </Grid>
                 </Grid>
               </CardContent>
             </Card>
           </Grid>
           <Grid item xs={12} lg={6}>
-            <ReactSwitch divices={divicesLed} groupName="Đèn" />
+            <ReactSwitch
+              checks={checks}
+              json={json}
+              divices={divicesLed}
+              groupName="Đèn"
+            />
           </Grid>
           <Grid item xs={12} lg={6}>
-            <ReactSwitch divices={divicesFan} groupName="Quạt" />
+            <ReactSwitch
+              checks={checks}
+              json={json}
+              divices={divicesFan}
+              groupName="Quạt"
+            />
           </Grid>
           {/*
           <Grid item xs={12} sm={12} md={6}>
