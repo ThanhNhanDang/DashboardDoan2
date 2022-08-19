@@ -1,9 +1,11 @@
 import ReactApexChart from "react-apexcharts";
 
 function Temp({ series }) {
-
   const options = {
     chart: {
+      animations: {
+        enabled: false,
+      },
       height: 350,
       type: "radialBar",
       toolbar: {
@@ -43,22 +45,7 @@ function Temp({ series }) {
           },
         },
 
-        dataLabels: {
-          show: true,
-          name: {
-            offsetY: -10,
-            show: true,
-            color: "#888",
-            fontSize: "17px",
-          },
-          value: {
-            color: "#111",
-            fontSize: "36px",
-            formatter: function (val) {
-              return val;
-            },
-          },
-        },
+        
       },
     },
     fill: {
@@ -78,6 +65,9 @@ function Temp({ series }) {
       lineCap: "round",
     },
     labels: ["Nhiệt Độ (Độ C)"],
+    markers: {
+      size: 0,
+    },
   };
   return (
     <ReactApexChart

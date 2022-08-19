@@ -1,9 +1,11 @@
 import ReactApexChart from "react-apexcharts";
 
 function Humid({ series }) {
- 
   const options = {
     chart: {
+      animations: {
+        enabled: false,
+      },
       height: 350,
       type: "radialBar",
       toolbar: {
@@ -78,6 +80,9 @@ function Humid({ series }) {
       lineCap: "round",
     },
     labels: ["Độ ẩm (%)"],
+    markers: {
+      size: 0,
+    },
   };
   return (
     <ReactApexChart
