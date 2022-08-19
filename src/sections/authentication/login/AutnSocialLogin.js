@@ -13,8 +13,8 @@ export default function AutnSocialLogin() {
 
   const responseGoogle = async (responseGG) => {
     if (
-      responseGG?.profileObj.email == null ||
-      responseGG?.profileObj.email == undefined
+      responseGG?.profileObj.email === null ||
+      responseGG?.profileObj.email === undefined
     )
       return;
     await axios

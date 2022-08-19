@@ -5,7 +5,7 @@ import { Humid, Temp, ChartDht, TableDHT } from '../sections/@dashboard/app';
 
 function TempHumid() {
   return (
-    <Page title="Nhiệt độ, độ ẩm | Đồ án 1">
+    <Page title="Nhiệt độ, độ ẩm | Đồ án 2">
       <Container maxWidth="xl">
         <Box sx={{ pb: 5 }}>
           <Typography style={{ textAlign: 'center' }} variant="h3">

@@ -43,7 +43,7 @@ export default function LoginMQTT() {
 
       <SectionStyle sx={{ display: { xs: 'none', md: 'flex' } }}>
         <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-          ĐỒ ÁN 1 || HỆ THỐNG GIÁM SÁT VÀ CẢNH BÁO NHIỆT ĐỘ ĐỘ ẨM
+          ĐỒ ÁN 2 || HỆ THỐNG GIÁM SÁT VÀ CẢNH BÁO NHIỆT ĐỘ ĐỘ ẨM
         </Typography>
         <img src="/static/illustrations/illustration_login.png" alt="login" />
       </SectionStyle>

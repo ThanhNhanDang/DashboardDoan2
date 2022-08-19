@@ -39,7 +39,7 @@ const ContentStyle = styled('div')(({ theme }) => ({
 
 export default function Register() {
   return (
-    <RootStyle title="Đăng ký | Đồ án 1">
+    <RootStyle title="Đăng ký | Đồ án 2">
       <AuthLayout>
         Đã có tài khoản? &nbsp;
         <Link underline="none" variant="subtitle2" component={RouterLink} to="/login">
@@ -49,7 +49,7 @@ export default function Register() {
 
       <SectionStyle sx={{ display: { xs: 'none', md: 'flex' } }}>
         <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-          ĐỒ ÁN 1 || HỆ THỐNG GIÁM SÁT VÀ CẢNH BÁO NHIỆT ĐỘ ĐỘ ẨM
+          ĐỒ ÁN 2 || HỆ THỐNG GIÁM SÁT VÀ CẢNH BÁO NHIỆT ĐỘ ĐỘ ẨM
         </Typography>
         <img alt="register" src="/static/illustrations/illustration_register.png" />
       </SectionStyle>

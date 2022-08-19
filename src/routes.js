@@ -18,18 +18,37 @@ import { actGetUserAuth } from "./actions";
 import { Fab, Toolbar } from "@mui/material";
 import ScrollToTop from "./components/ScrollToTop";
 import { Icon } from "@iconify/react";
+import { Connector } from "mqtt-react-hooks";
+import { useState } from "react";
 
 // ----------------------------------------------------------------------
-
 export default function Router(props) {
-  const userAuth = JSON.parse(localStorage.getItem("user"));
+  const options = {
+    hostname: process.env.REACT_APP_MQTT_URL,
+    username: process.env.REACT_APP_MQTT_USERNAME,
+    password: process.env.REACT_APP_MQTT_PASSWORD,
+    // port: process.env.REACT_APP_MQTT_PORT,
+    protocol: "wss",
+  };
+
+  const [userAuth] = useState({
+    email: "yesthanhnhan16@gmail.com",
+    familyName: "Đặng",
+    givenName: "Thành Nhân",
+    googleId: "114296082739162407065",
+    imageUrl:
+      "https://lh3.googleusercontent.com/a-/AFdZucrODv0e5qGYRUNayJz-0Wnfmycp1GixNsiQ3HZhtQ=s96-c",
+    isLoginMqtt: true,
+    name: "Thành Nhân Đặng",
+  });
+
+  // JSON.parse(localStorage.getItem("user"));
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(actGetUserAuth(userAuth));
-    // eslint-disable-next-line
-  }, []);
+  }, [dispatch, userAuth]);
   return useRoutes([
     {
       path: "/dashboard",
@@ -37,7 +56,7 @@ export default function Router(props) {
         userAuth === null || userAuth === undefined || !userAuth.isLoginMqtt ? (
           <Login />
         ) : (
-          <>
+          <Connector options={options} parserMethod={(msg) => msg}>
             <Toolbar id="back-to-top-anchor" />
             <DashboardLayout />
             <ScrollToTop {...props}>
@@ -50,7 +69,7 @@ export default function Router(props) {
                 />
               </Fab>
             </ScrollToTop>
-          </>
+          </Connector>
         ),
       children: [
         {

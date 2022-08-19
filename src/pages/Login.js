@@ -38,7 +38,7 @@ const ContentStyle = styled('div')(({ theme }) => ({
 
 export default function Login() {
   return (
-    <RootStyle title="Đăng nhập | Đồ án 1">
+    <RootStyle title="Đăng nhập | Đồ án 2">
       <AuthLayout>
         Chưa có tài khoản? &nbsp;
         <Link underline="none" variant="subtitle2" component={RouterLink} to="/register">
@@ -48,7 +48,7 @@ export default function Login() {
 
       <SectionStyle sx={{ display: { xs: 'none', md: 'flex' } }}>
         <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-          ĐỒ ÁN 1 || HỆ THỐNG GIÁM SÁT VÀ CẢNH BÁO NHIỆT ĐỘ ĐỘ ẨM
+          ĐỒ ÁN 2 || HỆ THỐNG GIÁM SÁT VÀ CẢNH BÁO NHIỆT ĐỘ ĐỘ ẨM
         </Typography>
         <img src="/static/illustrations/illustration_login.png" alt="login" />
       </SectionStyle>

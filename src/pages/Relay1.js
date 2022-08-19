@@ -5,7 +5,7 @@ import Page from '../components/Page';
 
 function Relay1() {
   return (
-    <Page title="Thiết bị 1 | Đồ án 1">
+    <Page title="Thiết bị 1 | Đồ án 2">
       <Container maxWidth="xl">
         <Grid container spacing={3}>
           {/* <Grid item xs={12} sm={6} md={12}>
